@@ -1,5 +1,6 @@
 package com.rakib.reddit.model;
 
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
-//    @NotEmpty
+    @NotEmpty
     private String text;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "postId", referencedColumnName = "postId")

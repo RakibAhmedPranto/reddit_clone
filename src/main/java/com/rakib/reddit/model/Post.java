@@ -1,5 +1,6 @@
 package com.rakib.reddit.model;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +22,11 @@ public class Post {
     @Id
     @GeneratedValue(strategy = SEQUENCE)
     private Long postId;
-//    @NotBlank(message = "Post Name cannot be empty or Null")
+    @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;
-//    @Nullable
+    @Column(nullable = true)
     private String url;
-//    @Nullable
+    @Column(nullable = true)
     @Lob
     private String description;
     private Integer voteCount;

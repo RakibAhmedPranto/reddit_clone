@@ -1,6 +1,4 @@
 package com.rakib.reddit.model;
-
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +19,6 @@ public class Vote {
     @GeneratedValue(strategy = SEQUENCE)
     private Long voteId;
     private VoteType voteType;
-    @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "postId", referencedColumnName = "postId")
     private Post post;
