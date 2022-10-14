@@ -21,6 +21,12 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(message,false);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(GeneralApiException.class)
+    public ResponseEntity<ApiResponse> generalApiExceptionHandler(GeneralApiException ex){
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.LOCKED);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,String>> handleMethodArgsNotValidException(MethodArgumentNotValidException ex){
         Map<String,String> resp = new HashMap<>();

@@ -24,6 +24,7 @@ public class Subreddit {
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
     @NotBlank(message = "Community name is required")
+    @Column(name = "name", unique = true)
     private String name;
     @NotBlank(message = "Description is required")
     private String description;
