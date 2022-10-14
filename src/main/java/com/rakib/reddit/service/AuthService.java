@@ -19,6 +19,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,8 @@ public class AuthService {
     private final MailContentBuilder mailContentBuilder;
 
     private final ModelMapper modelMapper;
+
+
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -104,5 +107,10 @@ public class AuthService {
             System.out.println("Token Miss matched");
             return false;
         }
+    }
+
+    public String getCurrentUserEmail(){
+        User userDetail = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetail.getEmail();
     }
 }

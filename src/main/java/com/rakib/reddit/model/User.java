@@ -38,12 +38,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = SEQUENCE)
     private Long userId;
     @NotBlank(message = "Username is required")
+    @Column(name = "username", unique = true)
     private String username;
     @NotBlank(message = "Password is required")
     private String password;
     @Email
     @NotEmpty(message = "Email is required")
-    @Column(name = "email", nullable = true, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
     private Instant created;
     private boolean enabled;
