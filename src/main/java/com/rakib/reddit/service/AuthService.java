@@ -5,7 +5,7 @@ import static com.rakib.reddit.util.Constants.ROLE_USER;
 import static java.time.Instant.now;
 
 import com.rakib.reddit.dto.RegisterRequest;
-import com.rakib.reddit.exception.SpringRedditException;
+import com.rakib.reddit.exceptions.SpringRedditException;
 import com.rakib.reddit.exceptions.ResourceNotFoundException;
 import com.rakib.reddit.model.NotificationEmail;
 import com.rakib.reddit.model.Role;
