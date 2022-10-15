@@ -5,6 +5,7 @@ import com.rakib.reddit.dto.RegisterRequest;
 import com.rakib.reddit.dto.Response;
 import com.rakib.reddit.jwt.JwtTokenHelper;
 import com.rakib.reddit.jwt.response.JwtAuthResponse;
+import com.rakib.reddit.model.User;
 import com.rakib.reddit.service.AuthService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -70,7 +71,6 @@ public class AuthController {
         String refreshToken = null;
         if (token != null && token.startsWith("Bearer")) {
             refreshToken = token.substring(7);
-
             try {
                 username = this.jwtTokenHelper.getUsernameFromToken(refreshToken);
             } catch (IllegalArgumentException e) {
@@ -99,6 +99,44 @@ public class AuthController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
 
+        }else {
+            Response response = new Response<>();
+            response.setStatus(400);
+            response.setMessage("Bad Token Name");
+            response.setData("");
+            response.setSuccess(false);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/logout")
+    public ResponseEntity<Response> logout(@RequestHeader(name="Authorization") String token){
+        String username = null;
+
+        String refreshToken = null;
+        if (token != null && token.startsWith("Bearer")) {
+            refreshToken = token.substring(7);
+
+            try {
+                username = this.jwtTokenHelper.getUsernameFromToken(refreshToken);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Unable to get Jwt token");
+            } catch (ExpiredJwtException e) {
+                System.out.println("Jwt token has expired");
+            } catch (MalformedJwtException e) {
+                System.out.println("invalid jwt");
+            } catch (SignatureException e){
+                System.out.println("invalid jwt");
+            }
+
+            Boolean loggedOut = this.authService.logoutUserByRefreshToken(username, refreshToken);
+
+            if(loggedOut){
+                Response<String> response = new Response<>(200,true,"Successfully logged out","");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }else {
+                Response<String> response = new Response<>(401,true,"UnAuthorised","");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
         }else {
             Response response = new Response<>();
             response.setStatus(400);

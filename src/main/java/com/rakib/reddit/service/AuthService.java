@@ -83,6 +83,22 @@ public class AuthService {
     }
 
     @Transactional
+    public Boolean logoutUserByRefreshToken(String email,String refreshToken) {
+
+        User user = userRepository.findByEmailAndRefreshTokenAndEnabledTrue(email,refreshToken)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "Refresh Token", refreshToken));
+
+        String dbRefreshToken = user.getRefreshToken();
+        if(dbRefreshToken.equals(refreshToken)){
+            user.setRefreshToken("");
+            userRepository.save(user);
+            return true;
+        }else {
+            throw new ResourceNotFoundException("User", "Refresh Token", refreshToken);
+        }
+    }
+
+    @Transactional
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         String email = verificationToken.getUser().getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new SpringRedditException("User Not Found with email - " + email));
@@ -99,7 +115,6 @@ public class AuthService {
 
     public Boolean checkUserAndRefreshToken(String email, String refreshtoken) {
         User user = this.userRepository.findByEmailAndEnabledTrue(email).orElseThrow(()->new ResourceNotFoundException("User","email",email));
-
         String dbRefreshToken = user.getRefreshToken();
         if(dbRefreshToken.equals(refreshtoken)){
             return true;
