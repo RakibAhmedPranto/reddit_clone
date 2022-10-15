@@ -2,6 +2,7 @@ package com.rakib.reddit.controller;
 
 import com.rakib.reddit.dto.CommentsDto;
 import com.rakib.reddit.dto.PostResponse;
+import com.rakib.reddit.dto.Response;
 import com.rakib.reddit.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,20 +18,25 @@ public class CommentsController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Void> createComment(@RequestBody CommentsDto commentsDto) {
+    public ResponseEntity<Response<String>> createComment(@RequestBody CommentsDto commentsDto) {
         commentService.createComment(commentsDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Response<String> response = new Response<>(201, true, "Commented Successfully", "");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(@RequestParam("postId") Long postId) {
+    @GetMapping("/by-postId/{postId}")
+    public ResponseEntity<Response<List<CommentsDto>>> getAllCommentsForPost(@PathVariable Long postId) {
         List<CommentsDto> commentByPost = commentService.getCommentByPost(postId);
-        return new ResponseEntity<List<CommentsDto>>(commentByPost,HttpStatus.OK);
+        Response<List<CommentsDto>> response = new Response<>(200, true, "Comments Found for Post",
+            commentByPost);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CommentsDto>> getAllCommentsByUser(@RequestParam("userName") String userName) {
+    @GetMapping("/by-user/{userName}")
+    public ResponseEntity<Response<List<CommentsDto>>> getAllCommentsByUser(@PathVariable String userName) {
         List<CommentsDto> commentsByUser = commentService.getCommentsByUser(userName);
-        return new ResponseEntity<List<CommentsDto>>(commentsByUser,HttpStatus.OK);
+        Response<List<CommentsDto>> response = new Response<>(200, true, "Comments Found for User",
+            commentsByUser);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

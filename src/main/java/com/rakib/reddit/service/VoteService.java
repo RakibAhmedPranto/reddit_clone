@@ -30,6 +30,7 @@ public class VoteService {
         String currentUserEmail = authService.getCurrentUserEmail();
         User user = this.userRepository.findByEmailAndEnabledTrue(currentUserEmail).orElseThrow(() -> new ResourceNotFoundException("User", "email", currentUserEmail));
 
+
         Optional<Vote> voteByPostAndUser = voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, user);
 
         if (voteByPostAndUser.isPresent() &&

@@ -2,6 +2,7 @@ package com.rakib.reddit.service;
 
 import com.rakib.reddit.dto.SubredditDto;
 import com.rakib.reddit.exceptions.ResourceNotFoundException;
+import com.rakib.reddit.model.Post;
 import com.rakib.reddit.model.Subreddit;
 import com.rakib.reddit.model.User;
 import com.rakib.reddit.repository.SubredditRepository;
@@ -28,7 +29,7 @@ public class SubredditService {
         List<Subreddit> subreddits = this.subredditRepository.findAll();
         List<SubredditDto> subredditDtoList = subreddits.stream().map((subreddit) -> {
             SubredditDto dto = this.modelMapper.map(subreddit, SubredditDto.class);
-            dto.setPostCount(subreddit.getPosts().size());
+            dto.setPostCount((subreddit.getPosts() != null) ? subreddit.getPosts().size() : 0);
             return dto;
         }).collect(Collectors.toList());
         return subredditDtoList;
@@ -42,7 +43,7 @@ public class SubredditService {
         subreddit.setUser(user);
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
         SubredditDto subredditDtoResp = this.modelMapper.map(savedSubreddit, SubredditDto.class);
-        subredditDtoResp.setPostCount(savedSubreddit.getPosts().size());
+        subredditDtoResp.setPostCount((savedSubreddit.getPosts() != null) ? savedSubreddit.getPosts().size() : 0);
         return subredditDtoResp;
     }
 
@@ -51,7 +52,7 @@ public class SubredditService {
         Subreddit subreddit = subredditRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subreddit","id", id.toString()));
         SubredditDto dto = this.modelMapper.map(subreddit, SubredditDto.class);
-        dto.setPostCount(subreddit.getPosts().size());
+        dto.setPostCount((subreddit.getPosts() != null) ? subreddit.getPosts().size() : 0);
         return dto;
     }
 }

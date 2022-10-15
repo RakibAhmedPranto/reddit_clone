@@ -1,5 +1,6 @@
 package com.rakib.reddit.controller;
 
+import com.rakib.reddit.dto.Response;
 import com.rakib.reddit.dto.VoteDto;
 import com.rakib.reddit.service.VoteService;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,9 @@ public class VoteController {
     private final VoteService voteService;
 
     @PostMapping
-    public ResponseEntity<Void> vote(@RequestBody VoteDto voteDto) {
+    public ResponseEntity<Response<String>> vote(@RequestBody VoteDto voteDto) {
         voteService.vote(voteDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Response<String> voted_successfully = new Response<>(201, true, "Voted Successfully", "");
+        return new ResponseEntity<>(voted_successfully, HttpStatus.CREATED);
     }
 }
